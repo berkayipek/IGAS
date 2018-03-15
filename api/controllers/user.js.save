@@ -26,10 +26,12 @@ exports.user_register = (req, res, next) => {
               });
             } else {
 
+              console.log("username valid");
               ecc.randomKey().then(privateKey => {
+                console.log("priv key: " + privateKey);
                 const publicKey = ecc.privateToPublic(privateKey);
-                const keyProvider = ['5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3'];
-                const eos = Eos.Localnet({keyProvider});
+                const keyprovider = ["5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3",, "EOS5apWfT4iMxY1WoZ2J9DZ1X7RaUiG7z7b6ubSaY4RPBKAqMtcRW"];
+                const eos = Eos.Localnet({keyprovider});
                 eos.newaccount({
                   creator: 'inita',
                   name: req.body.username,
@@ -49,7 +51,7 @@ exports.user_register = (req, res, next) => {
                     .then(result => {
                       console.log(result + "private key: " + privateKey);
                       res.status(201).json({
-                        message: "User created, privateKey = " + privateKey + "public: " + publicKey
+                        message: "User created, privateKey = " + privateKey
                       });
                     })
                     .catch(err => {

@@ -1,2 +1,4 @@
 node_modules
+pm2config.json
 nodemon.json
+*.log

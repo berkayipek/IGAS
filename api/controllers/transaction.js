@@ -6,17 +6,15 @@ const Eos = require('eosjs');
 const User = require("../models/user");
 
 exports.tn_send = (req, res, next) => {
-  const sender = req.body.accountName;
+  const sender = req.body.username;
   const reciever = req.body.reciever;
   const amount = req.body.amount;
-  const keyprovider = [req.body.privateKey, "EOS87xTQe5jymEREgxVVSLhjWKK3C5LTHfZEJWesg97BTtmF6ZJHx"];
-  const eos = Eos.Localnet({keyprovider});
+  const keyProvider = [req.body.privateKey, 'EOS5apWfT4iMxY1WoZ2J9DZ1X7RaUiG7z7b6ubSaY4RPBKAqMtcRW', '5KJ3Q4amCZHr6xutNJwjfK6j9ND4kTUJE9qABRizcPHSBPLEo2B'];
+  const eos = Eos.Localnet({keyProvider});
   eos.contract('currency').then(currency => {
     // Transfer is one of the actions in currency.abi
     currency.transfer(sender, reciever, amount);
   });
-
-
   const gettableoptions = {
     json: true,
     table_key: "currency",
@@ -27,7 +25,8 @@ exports.tn_send = (req, res, next) => {
 
   eos.getTableRows(gettableoptions).then(results => {
     res.status(201).json({
-      message: "Successfully send!"
+      message: "Successfully send!",
+      results: results
     });
   });
   // eos.getAccount(reciever).then(
@@ -51,9 +50,12 @@ exports.tn_send = (req, res, next) => {
 //   });
 // });
 exports.tn_getBlock = (req, res, next) => {
-  const keyprovider = [];
-  const eos = Eos.Localnet({keyprovider});
+  const keyProvider = [];
+  const eos = Eos.Localnet({keyProvider});
   eos.getBlock(req.params.number).then(result => {
-    console.log(result);
+    res.status(201).json({
+      message: "Successfully send!",
+      results: result
+    });
   });
 };
